@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SmoothScroll from "@/lib/smooth-scroll";
 import "./globals.css";
 import "./fonts.css";
 
@@ -21,8 +22,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
     lang="es"
-    className="scroll-smooth antialiased font-opensans">
-      <body className="min-h-dvh flex flex-col bg-background text-foreground">{children}</body>
+    className="antialiased font-opensans">
+      <body className="min-h-dvh flex flex-col bg-background text-foreground">
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
+      </body>
     </html>
   );
 }
