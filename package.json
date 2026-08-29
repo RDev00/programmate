@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "optimize-public": "node scripts/optimize-public-assets.js",
+    "generate-favicon": "node scripts/generate-favicon-assets.js"
   },
   "dependencies": {
     "next": "16.3.3",
