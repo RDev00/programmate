@@ -4,10 +4,12 @@ App built for improve AI Agents brain with markdown linked files between them, l
 ## Development
 
 ### Technologies
-- NextJS as IDE
+- NextJS as Framework
 - TypeScript as Languaje
 - TailwindCSS as Classes gestor
 - pnpm as Package Manager
+- GLM 5.3 Flash as AI Agent
+- Zed as Autocompleter and IDE
 
 ### Node scripts
 ``` bash
@@ -20,4 +22,10 @@ pnpm dev
 # Project production
 pnpm build
 pnpm start
+```
+
+### Env settings
+```bash
+SUPABASE_URL=string
+SUPABASE_KEY=string
 ```
