@@ -53,7 +53,7 @@ export default function Footer() {
 
   return (
     <footer
-    className="w-full p-4 bg-neutral-950 flex flex-col md:flex-row gap-2 items-center justify-center">
+    className="w-full p-4 bg-neutral-950 flex flex-col md:flex-row gap-2 items-center justify-center animate-fade-in-up">
       <div
       className="w-full flex flex-col md:flex-row gap-4 items-start justify-start px-10">
         {

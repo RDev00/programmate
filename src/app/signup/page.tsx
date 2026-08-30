@@ -14,9 +14,11 @@ import Link from "next/link";
 
 import { useState } from "react";
 
-export default function SignInPage() {
+export default function SignUpPage() {
+  const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
+  const [ confirmPassword, setConfirmPassword ] = useState("");
 
   return (
     <div
@@ -25,16 +27,24 @@ export default function SignInPage() {
         className="w-100 gap-3"
         noBg
         animation>
-          <Link
-            href="/"
-            className="aspect-square block w-15">
-            <Image
-              src="/logo.svg"
-              alt="Nex0 Logo"
-              width={100}
-              height={100}
-            />
-          </Link>
+        <Link
+          href="/"
+          className="aspect-square block w-15">
+          <Image
+            src="/logo.svg"
+            alt="Nex0 Logo"
+            width={100}
+            height={100}
+          />
+        </Link>
+
+        <Input
+          label="Insert your name"
+          placeholder="John Doe"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          darker />
 
         <Input
           label="Insert your email"
@@ -45,11 +55,20 @@ export default function SignInPage() {
           darker />
 
         <Input
-          label="Insert your password"
+          label="Create a password"
           placeholder="********"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+          darker />
+
+        <Input
+          label="Confirm your password"
+          placeholder="********"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
           darker />
 
@@ -58,14 +77,14 @@ export default function SignInPage() {
           type="submit"
           size="w-full"
           className="text-sm p-2 mt-8">
-          Sign In
+          Sign Up
         </Button>
         <p
           className="text-xs w-full text-center">
-          Don&apos;t have an account? <Link
-            href="/signup"
+          Do you have an account? <Link
+            href="/signin"
             className="hover:underline hover:text-highlight duration-200 font-semibold">
-            Sign Up
+            Sign In
           </Link>
         </p>
 
@@ -104,7 +123,7 @@ export default function SignInPage() {
 
         <p
           className="text-neutral-400 text-xs text-center">
-          By signing in, you agree to our <Link
+          By signing up, you agree to our <Link
               href="/legal/tos"
               className="hover:underline hover:text-highlight duration-200 font-semibold">
               Terms of Service
@@ -113,6 +132,15 @@ export default function SignInPage() {
               className="hover:underline hover:text-highlight duration-200 font-semibold">
               Privacy Policy
             </Link>.
+        </p>
+
+        <p
+          className="text-neutral-400 text-xs text-center">
+          Already have an account? <Link
+              href="/signin"
+              className="hover:underline hover:text-highlight duration-200 font-semibold">
+              Sign In
+            </Link>
         </p>
       </Form>
     </div>
