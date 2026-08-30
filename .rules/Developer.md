@@ -21,17 +21,19 @@ src/
 ├── app/
 │   ├── api/
 │   │   └── ...
-│   ├── ...
+│   ├── signin/
+│   │   └── page.tsx
 │   └── ...
 │
-├── lib/
-│   └── ...
+├── components/
+│   ├── layout/
+│   └── ui/
 │
-├── utils/
-│   └── ...
+├── layouts/
+│   └── marketing.tsx
 │
-└── types/
-    └── ...
+└── lib/
+    └── smooth-scroll.tsx
 ```
 
 ## `src/app`
@@ -93,7 +95,49 @@ Keep API handlers focused on:
 
 Do not put large business-logic implementations directly inside `route.ts`.
 
-Move reusable logic into `lib` or `utils` when appropriate.
+Move reusable logic into `lib` when appropriate.
+
+---
+
+## `src/components`
+
+Contains reusable React components shared across pages and routes.
+
+Use this directory for:
+
+* `src/components/ui` — small, reusable UI primitives (Button, Input, Form, etc.)
+* `src/components/layout` — structural components used to compose pages (sections, headers, footers, etc.)
+
+Example:
+
+```text
+src/components/
+├── layout/
+│   └── hero.tsx
+└── ui/
+    ├── button.tsx
+    ├── form.tsx
+    └── input.tsx
+```
+
+Conventions used by the existing UI primitives:
+
+* Default exports.
+* A local `Props` interface defined in the same file.
+* Variant styling handled with a plain object map inside the component (e.g. Button's `variants`).
+* Boolean props for simple toggles (e.g. `darker`, `noBg`, `animation`).
+* Class names composed via string concatenation; there is no `cn` utility yet.
+* Icons come from `@tabler/icons-react`.
+
+Do not create one-off duplicates of these primitives. Reuse `Button`, `Input` and `Form` before building new equivalents.
+
+---
+
+## `src/layouts`
+
+Contains page-level layout wrappers (e.g. `marketing.tsx`) used by routes.
+
+Use this directory for layout shells that wrap page content, not for reusable UI primitives (those belong in `src/components`).
 
 ---
 
@@ -125,52 +169,13 @@ Do not place generic helper functions here if they belong in `utils`.
 
 ---
 
-## `src/utils`
+## `src/utils` and `src/types` (reserved)
 
-Contains reusable utility functions.
+These directories do not exist yet but are reserved by the architecture.
 
-Use this directory for pure or mostly self-contained functions such as:
+Create `src/utils` only when a genuinely reusable, mostly pure function is needed in more than one place. Utilities should have a single responsibility, be easy to test, avoid side effects, and never contain React components.
 
-```text
-src/utils/
-├── formatDate.ts
-├── cn.ts
-├── validation.ts
-└── ...
-```
-
-Utilities should generally:
-
-* Have a single responsibility.
-* Be easy to test.
-* Avoid unnecessary side effects.
-* Not contain React components.
-* Not contain page-specific UI logic.
-
-Do not create utility files for one-off functions that are only used once unless doing so materially improves readability.
-
----
-
-## `src/types`
-
-Contains shared TypeScript types.
-
-Use this directory when a type is shared across multiple modules.
-
-Example:
-
-```text
-src/types/
-├── user.ts
-├── project.ts
-└── api.ts
-```
-
-Keep domain types organized and reusable.
-
-Do not create a global type file for every trivial local type.
-
-If a type is only used by one component, define it locally:
+Create `src/types` only when a type is shared across multiple modules. If a type is only used by one component, define it locally:
 
 ```tsx
 type Item = {
@@ -179,7 +184,7 @@ type Item = {
 };
 ```
 
-Move it to `src/types` only when it becomes shared or sufficiently important.
+Do not create these directories preemptively.
 
 ---
 
@@ -205,13 +210,25 @@ src/app/api/
 src/lib/
 ```
 
-### Generic reusable function
+### Reusable component
+
+```text
+src/components/
+```
+
+### Page-level layout wrapper
+
+```text
+src/layouts/
+```
+
+### Generic reusable function (when it becomes necessary)
 
 ```text
 src/utils/
 ```
 
-### Shared TypeScript type
+### Shared TypeScript type (when it becomes shared)
 
 ```text
 src/types/
@@ -227,6 +244,8 @@ src/controllers/
 src/domain/
 src/features/
 src/modules/
+src/utils/ (preemptively)
+src/types/ (preemptively)
 ```
 
 unless the user explicitly requests a change to the architecture.
@@ -319,9 +338,21 @@ If only one section requires client-side functionality, prefer isolating that fu
 
 # Styling
 
-Use Tailwind CSS when styling components.
+Use Tailwind CSS v4 when styling components. Design tokens are defined in `src/app/globals.css` inside the `@theme` block:
 
-Follow the project's existing design system and CSS tokens.
+```css
+@theme {
+  --color-background: #010101;
+  --color-foreground: #FAFAFA;
+  --color-accent: #0c30fa;
+  --color-hover: #2A3AAA;
+  --color-highlight: #3075ff;
+  --color-ghost: #1A1A1A;
+  --color-off: #2B2B2B;
+}
+```
+
+This makes utilities such as `bg-background`, `text-foreground`, `bg-accent`, `text-highlight`, `bg-ghost` and `bg-off` available. Animations come from `tailwind-animations` (e.g. `animate-fade-in-up`).
 
 Do not arbitrarily introduce new colors, spacing systems, shadows, radii or typography styles when an existing token or convention can be reused.
 
@@ -338,6 +369,8 @@ className="bg-[#010101] text-[#FAFAFA]"
 ```
 
 when the existing design token represents the same value.
+
+The project uses a dark, near-black theme with neutral grays (`neutral-800`, `neutral-900`, `neutral-950`, `neutral-400`) for surfaces and muted text. Keep new UI consistent with this palette.
 
 Keep responsive behavior consistent with the existing project.
 

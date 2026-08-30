@@ -19,7 +19,7 @@ export default function Button(props: Props) {
       class: "bg-white text-black"
     },
     "ghost": {
-      class: "bg-transparent text-black"
+      class: ""
     }
   };
 
@@ -29,7 +29,7 @@ export default function Button(props: Props) {
     props.type !== "link" && !props.href ?
       <button
         type={props.type ?? "button"}
-        className={currentVariant.class + " rounded-sm text-center hover:brightness-75 duration-200 " + props.className + " " + props.size}>
+        className={currentVariant.class + " rounded-sm text-center hover:brightness-75 duration-200 cursor-pointer " + props.className + " " + props.size}>
         {props.children}
       </button> :
       <Link
