@@ -17,7 +17,7 @@ export type Payment = {
   created_at: string;
 };
 
-export type OAuthProviderName = "github" | "google" | "gitlab" | "discord";
+export type OAuthProviderName = "github" | "google" | "gitlab";
 
 export type OAuthAccount = {
   provider: OAuthProviderName;

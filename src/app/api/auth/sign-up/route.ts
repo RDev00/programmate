@@ -1,7 +1,7 @@
 import { Response as ApiResponse } from "@/utils/response";
 import { hashPassword, signAuthToken, toPublicUser, AUTH_COOKIE } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { createClerkUser } from "@/lib/clerk";
+import { createClerkUser, deleteClerkUser } from "@/lib/clerk";
 import { SignUpCredentials, Users } from "@/types/user";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -46,60 +46,64 @@ export async function POST(request: NextRequest) {
       }, { status: 409 });
     }
 
+    const userId = crypto.randomUUID();
     const now = new Date().toISOString();
-    const passwordHash = await hashPassword(password);
 
-    const { data: user, error } = await db
-      .from("users")
-      .insert({
-        username,
-        email,
-        password: passwordHash,
-        api_keys: [],
-        payments: [],
-        plan: "free",
-        oauth_providers: [],
-        vaults: [],
-        created_at: now,
-        signed_at: now
-      })
-      .select()
-      .single();
-
-    if (error || !user) {
-      throw new Error(error?.message || "Failed to create user");
-    }
+    const clerkUser = await createClerkUser({
+      externalId: userId,
+      email,
+      username,
+      password
+    });
 
     try {
-      await createClerkUser({
-        externalId: user.id,
-        email,
-        username
+      const { data: user, error } = await db
+        .from("users")
+        .insert({
+          id: userId,
+          username,
+          email,
+          password: await hashPassword(password),
+          api_keys: [],
+          payments: [],
+          plan: "free",
+          oauth_providers: [],
+          vaults: [],
+          created_at: now,
+          signed_at: now
+        })
+        .select()
+        .single();
+
+      if (error || !user) {
+        throw new Error(error?.message || "Failed to create user");
+      }
+
+      const token = signAuthToken({
+        sub: user.id,
+        username: user.username,
+        email: user.email
       });
-    } catch (clerkError) {
-      console.error("Clerk user sync failed:", clerkError);
+
+      const response = NextResponse.json({
+        user: toPublicUser(user as Users)
+      }, { status: 201 });
+
+      response.cookies.set(AUTH_COOKIE, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/"
+      });
+
+      return response;
+    } catch (dbError) {
+      await deleteClerkUser(clerkUser.id);
+      throw dbError;
     }
-
-    const token = signAuthToken({
-      sub: user.id,
-      username: user.username,
-      email: user.email
-    });
-
-    const response = NextResponse.json({
-      user: toPublicUser(user as Users)
-    }, { status: 201 });
-
-    response.cookies.set(AUTH_COOKIE, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/"
-    });
-
-    return response;
   } catch (e) {
+    console.error(e);
     return ApiResponse.serverError(e);
   }
 }

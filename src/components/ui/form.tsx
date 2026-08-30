@@ -1,7 +1,7 @@
 interface Props {
   children?: React.ReactNode;
-  onSubmit?: () => void;
-  onReset?: () => void;
+  onSubmit?: React.FormEventHandler;
+  onReset?: React.FormEventHandler;
   onError?: () => void;
   className?: string;
   noBg?: boolean;

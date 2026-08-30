@@ -1,64 +1,56 @@
-const API_BASE = "https://api.clerk.com/v1";
+import { clerkClient } from "@clerk/nextjs/server";
 
-type ClerkUser = {
+export type ClerkUser = {
   id: string;
-  external_id: string | null;
+  externalId: string | null;
   username: string | null;
-  email_addresses: { id: string; email_address: string }[];
+  emailAddresses: { id: string; emailAddress: string }[];
 };
-
-function secretKey(): string | null {
-  return process.env.CLERK_SECRET_KEY ?? null;
-}
-
-async function request<T>(
-  path: string,
-  init: RequestInit = {}
-): Promise<T | null> {
-  const key = secretKey();
-
-  if (!key) {
-    return null;
-  }
-
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      ...init.headers
-    }
-  });
-
-  if (!response.ok) {
-    const reason = await response.text();
-    throw new Error(`Clerk API error (${response.status}): ${reason}`);
-  }
-
-  return (await response.json()) as T;
-}
 
 export async function createClerkUser(params: {
   externalId: string;
   email: string;
   username: string;
-}): Promise<ClerkUser | null> {
-  return request<ClerkUser>("/users", {
-    method: "POST",
-    body: JSON.stringify({
-      external_id: params.externalId,
-      email_address: [params.email],
-      username: params.username,
-      skip_password_checks: true,
-      skip_password_requirement: true
-    })
+  password?: string;
+}): Promise<ClerkUser> {
+  const client = await clerkClient();
+
+  return client.users.createUser({
+    externalId: params.externalId,
+    emailAddress: [params.email],
+    username: params.username,
+    password: params.password,
+    skipPasswordChecks: true
   });
 }
 
 export async function getClerkUserByEmail(email: string): Promise<ClerkUser | null> {
-  const users = await request<ClerkUser[]>(
-    `/users?email_address=${encodeURIComponent(email)}`
-  );
+  const client = await clerkClient();
 
-  return users?.[0] ?? null;
+  const { data } = await client.users.getUserList({
+    emailAddress: [email],
+    limit: 1
+  });
+
+  return data[0] ?? null;
+}
+
+export async function verifyClerkPassword(
+  clerkUserId: string,
+  password: string
+): Promise<boolean> {
+  const client = await clerkClient();
+
+  const { verified } = await client.users.verifyPassword({
+    userId: clerkUserId,
+    password
+  });
+
+  return verified;
+}
+
+export async function deleteClerkUser(clerkUserId: string): Promise<void> {
+  const client = await clerkClient();
+
+  await client.users.deleteUser(clerkUserId);
 }

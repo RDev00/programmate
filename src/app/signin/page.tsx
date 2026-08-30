@@ -3,20 +3,49 @@
 import Button from "@/components/ui/button";
 import Form from "@/components/ui/form";
 import Input from "@/components/ui/input";
-
-import {
-  IconBrandGithub,
-  IconBrandGitlab, IconBrandGoogleFilled
-} from "@tabler/icons-react";
+import OAuthButtons from "@/components/utils/oauth-buttons";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
 export default function SignInPage() {
+  const router = useRouter();
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
+  const [ error, setError ] = useState("");
+  const [ loading, setLoading ] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!response.ok) {
+        setError(
+          response.status === 401
+            ? "Invalid email or password"
+            : "Something went wrong. Try again."
+        );
+        return;
+      }
+
+      router.push("/");
+    } catch {
+      setError("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -24,7 +53,8 @@ export default function SignInPage() {
       <Form
         className="w-100 gap-3"
         noBg
-        animation>
+        animation
+        onSubmit={handleSubmit}>
           <Link
             href="/"
             className="aspect-square block w-15">
@@ -50,7 +80,6 @@ export default function SignInPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
           darker />
 
         <Button
@@ -58,8 +87,13 @@ export default function SignInPage() {
           type="submit"
           size="w-full"
           className="text-sm p-2 mt-8">
-          Sign In
+          {loading ? "Signing In..." : "Sign In"}
         </Button>
+
+        {error && (
+          <p className="text-xs text-red-400 text-center">{error}</p>
+        )}
+
         <p
           className="text-xs w-full text-center">
           Don&apos;t have an account? <Link
@@ -72,33 +106,7 @@ export default function SignInPage() {
         <div
           className="w-full flex flex-col items-center justify-center text-sm mb-5 gap-3">
           Or continue with
-          <div
-            className="flex justify-between items-center w-full">
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGoogleFilled
-              color="#FAFAFA"/>
-            </Button>
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGithub
-              color="#FAFAFA"/>
-            </Button>
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGitlab
-              color="#FAFAFA"/>
-            </Button>
-          </div>
+          <OAuthButtons />
         </div>
 
 

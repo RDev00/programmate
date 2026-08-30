@@ -3,22 +3,66 @@
 import Button from "@/components/ui/button";
 import Form from "@/components/ui/form";
 import Input from "@/components/ui/input";
-
-import {
-  IconBrandGithub,
-  IconBrandGitlab, IconBrandGoogleFilled
-} from "@tabler/icons-react";
+import OAuthButtons from "@/components/utils/oauth-buttons";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
   const [ confirmPassword, setConfirmPassword ] = useState("");
+  const [ error, setError ] = useState("");
+  const [ loading, setLoading ] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: name.trim().replace(/\s+/g, "_"),
+          email,
+          password
+        })
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+
+        setError(
+          data?.message ??
+            (response.status === 400
+              ? "Check your fields (username: 3-32 letters/numbers/underscores, password: 8+ characters)"
+              : "Something went wrong. Try again.")
+        );
+        return;
+      }
+
+      router.push("/");
+    } catch {
+      setError("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -26,7 +70,8 @@ export default function SignUpPage() {
       <Form
         className="w-100 gap-3"
         noBg
-        animation>
+        animation
+        onSubmit={handleSubmit}>
         <Link
           href="/"
           className="aspect-square block w-15">
@@ -60,7 +105,6 @@ export default function SignUpPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
           darker />
 
         <Input
@@ -69,7 +113,6 @@ export default function SignUpPage() {
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
           darker />
 
         <Button
@@ -77,8 +120,13 @@ export default function SignUpPage() {
           type="submit"
           size="w-full"
           className="text-sm p-2 mt-8">
-          Sign Up
+          {loading ? "Signing Up..." : "Sign Up"}
         </Button>
+
+        {error && (
+          <p className="text-xs text-red-400 text-center">{error}</p>
+        )}
+
         <p
           className="text-xs w-full text-center">
           Do you have an account? <Link
@@ -91,33 +139,7 @@ export default function SignUpPage() {
         <div
           className="w-full flex flex-col items-center justify-center text-sm mb-5 gap-3">
           Or continue with
-          <div
-            className="flex justify-between items-center w-full">
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGoogleFilled
-              color="#FAFAFA"/>
-            </Button>
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGithub
-              color="#FAFAFA"/>
-            </Button>
-            <Button
-              variant="ghost"
-              type="button"
-              size="w-28"
-              className="border border-neutral-900 p-2 flex items-center justify-center hover:bg-neutral-900">
-              <IconBrandGitlab
-              color="#FAFAFA"/>
-            </Button>
-          </div>
+          <OAuthButtons />
         </div>
 
 

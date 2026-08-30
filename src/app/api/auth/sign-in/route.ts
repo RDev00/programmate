@@ -1,15 +1,14 @@
 import { Response } from "@/utils/response";
 
+import { Response as ApiResponse } from "@/utils/response";
 import {
   AUTH_COOKIE,
   signAuthToken,
-  toPublicUser,
-  verifyPassword
+  toPublicUser
 } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-
+import { getClerkUserByEmail, verifyClerkPassword } from "@/lib/clerk";
 import { SignInCredentials, Users } from "@/types/user";
-
 import { NextRequest, NextResponse } from "next/server";
 
 function isValidCredentials(body: Partial<SignInCredentials>): body is SignInCredentials {
@@ -39,10 +38,16 @@ export async function POST(request: NextRequest) {
       .maybeSingle();
 
     if (!user) {
-      return Response.unauthorized();
+      return ApiResponse.unauthorized();
     }
 
-    const valid = await verifyPassword(password, user.password);
+    const clerkUser = await getClerkUserByEmail(email);
+
+    if (!clerkUser) {
+      return ApiResponse.unauthorized();
+    }
+
+    const valid = await verifyClerkPassword(clerkUser.id, password);
 
     if (!valid) {
       return Response.unauthorized();

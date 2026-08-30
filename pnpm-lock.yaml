@@ -11,6 +11,9 @@ importers:
       '@clerk/backend':
         specifier: ^3.16.13
         version: 3.16.13(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@clerk/nextjs':
+        specifier: ^7.8.3
+        version: 7.8.3(next@16.3.3(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@supabase/supabase-js':
         specifier: ^2.112.4
         version: 2.112.4
@@ -20,9 +23,6 @@ importers:
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
-      clerk:
-        specifier: ^3.2.0
-        version: 3.2.0
       crypto-ts:
         specifier: ^1.0.2
         version: 1.0.2(@angular/common@22.1.4(@angular/core@22.1.4(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.4(rxjs@7.8.2))
@@ -173,49 +173,20 @@ packages:
     resolution: {integrity: sha512-L6+48rB8WVoxoiFDKv49KWxc58aGwuYnbuHBxNdqgTZO6PTyEH3KLpnqI/WaCqIxQW56MJE24EJREsU8WlWrWw==}
     engines: {node: '>=20.9.0'}
 
-  '@clerk/cli-darwin-arm64@3.2.0':
-    resolution: {integrity: sha512-ACdcyqqdtDtoOE5A8BvClY2vcDdlRxc5pKotCbbB7DjsiZ3CE/g18M0yMyYYPvPLzd93PS7yReTPxWuxhhuZ/g==}
-    cpu: [arm64]
-    os: [darwin]
+  '@clerk/nextjs@7.8.3':
+    resolution: {integrity: sha512-1ltta1RbpbM7/ahZ3rROBV7bFTbNE0C10Hw3CRPt+tGYuO7dMz6sq+0aMEwRS/3flpN8J3/pHxiUGfMfliLWaQ==}
+    engines: {node: '>=20.9.0'}
+    peerDependencies:
+      next: ^15.2.8 || ^15.3.8 || ^15.4.10 || ^15.5.9 || ^15.6.0-0 || ^16.0.10 || ^16.1.0-0
+      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
 
-  '@clerk/cli-darwin-x64@3.2.0':
-    resolution: {integrity: sha512-0th+akBnO5lImawIxV/LTCn9Y990GDh5ZibrdzeBVGnLBklBoVMjCT2QKUSiHEbr4maUEj8k0Xl1VbPzE7WNxA==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@clerk/cli-linux-arm64-musl@3.2.0':
-    resolution: {integrity: sha512-+JnogjMMV+bb0N8R3e/NngvVGNy+aZGihDr4rl8LTTZ6MqpPL/n7RtTVOIbaAd544VDZgSWbHsX7F2uyp7WEuw==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
-  '@clerk/cli-linux-arm64@3.2.0':
-    resolution: {integrity: sha512-ZfcZHtH88josgIiCiM8GJpTyip7q3UphlqAPFrOkPnymES/oNEh1vHRSnmvlNWtOKVzZt4U00fz633Ykagdxcw==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
-  '@clerk/cli-linux-x64-musl@3.2.0':
-    resolution: {integrity: sha512-7VD17oW/7YdQ/c3kTI218CXZmbStDeVj34L47b0chXwRer9THVYi+VnhhhiyQpCouyquqWRL2XPIfT/g5OZ3SQ==}
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
-  '@clerk/cli-linux-x64@3.2.0':
-    resolution: {integrity: sha512-sIELzItsUSRkXyh+iR+i92yEvqoMHhrqNndjgfHQ6fwh/+1DcoT0UCZYtZBWwM21l7eJ742Qju3lxsWxUWKy1w==}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
-
-  '@clerk/cli-win32-arm64@3.2.0':
-    resolution: {integrity: sha512-+7OBsTwTM/IFHWE7MorEMNHxj8MsgktPvJeMFOhJvb66gjVwa+8hMv+ogwAUXoBKEUvos7gJZ6huUfJh2xnZZw==}
-    cpu: [arm64]
-    os: [win32]
-
-  '@clerk/cli-win32-x64@3.2.0':
-    resolution: {integrity: sha512-T4JI0CPyMe1U/kuZApCqOPK3C0E20AStUH16I0cbz/mGmcMLBowMMHXaO1xKplM4nz/OKn0392Q1qsjd5RHASw==}
-    cpu: [x64]
-    os: [win32]
+  '@clerk/react@6.14.8':
+    resolution: {integrity: sha512-N7Ca3zze0PsVZ+TiMq6foYUMJMuCSzc8eqQombnqZVOhMxTB3KAn3jSHKBrN6fBZq4jGcqT1IcSsH/4xAMjjVQ==}
+    engines: {node: '>=20.9.0'}
+    peerDependencies:
+      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
 
   '@clerk/shared@4.30.2':
     resolution: {integrity: sha512-2U8jE2Gno2uRxg5b2fv5uY3zxzxAvmBzjiaOPAfoAVUgJ2Ys9kPu+6k2TaBNTkeF0ncQ/5erECIx6dPt0d8XyQ==}
@@ -1051,11 +1022,6 @@ packages:
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
-
-  clerk@3.2.0:
-    resolution: {integrity: sha512-nu2YUXwetAukdCeRcuCZAdHqTOryQtebd7SeihduXsqgZYwEkl6BB+m4QCSFoS3ODA64FampvKY/PGsyEJ5zGw==}
-    engines: {node: '>=20.0.0'}
-    hasBin: true
 
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
@@ -2047,6 +2013,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
+
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
     engines: {node: '>= 0.4'}
@@ -2409,29 +2378,23 @@ snapshots:
       - react
       - react-dom
 
-  '@clerk/cli-darwin-arm64@3.2.0':
-    optional: true
+  '@clerk/nextjs@7.8.3(next@16.3.3(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@clerk/backend': 3.16.13(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@clerk/react': 6.14.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@clerk/shared': 4.30.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.3(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      server-only: 0.0.1
+      tslib: 2.8.1
 
-  '@clerk/cli-darwin-x64@3.2.0':
-    optional: true
-
-  '@clerk/cli-linux-arm64-musl@3.2.0':
-    optional: true
-
-  '@clerk/cli-linux-arm64@3.2.0':
-    optional: true
-
-  '@clerk/cli-linux-x64-musl@3.2.0':
-    optional: true
-
-  '@clerk/cli-linux-x64@3.2.0':
-    optional: true
-
-  '@clerk/cli-win32-arm64@3.2.0':
-    optional: true
-
-  '@clerk/cli-win32-x64@3.2.0':
-    optional: true
+  '@clerk/react@6.14.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@clerk/shared': 4.30.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      tslib: 2.8.1
 
   '@clerk/shared@4.30.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -3183,17 +3146,6 @@ snapshots:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-
-  clerk@3.2.0:
-    optionalDependencies:
-      '@clerk/cli-darwin-arm64': 3.2.0
-      '@clerk/cli-darwin-x64': 3.2.0
-      '@clerk/cli-linux-arm64': 3.2.0
-      '@clerk/cli-linux-arm64-musl': 3.2.0
-      '@clerk/cli-linux-x64': 3.2.0
-      '@clerk/cli-linux-x64-musl': 3.2.0
-      '@clerk/cli-win32-arm64': 3.2.0
-      '@clerk/cli-win32-x64': 3.2.0
 
   client-only@0.0.1: {}
 
@@ -4316,6 +4268,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.8.5: {}
+
+  server-only@0.0.1: {}
 
   set-function-length@1.2.2:
     dependencies:

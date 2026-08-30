@@ -8,6 +8,7 @@ interface Props {
   className?: string;
   href?: string;
   variant?: "primary" | "secondary" | "ghost";
+  ariaLabel?: string;
 }
 
 export default function Button(props: Props) {
@@ -29,11 +30,13 @@ export default function Button(props: Props) {
     props.type !== "link" && !props.href ?
       <button
         type={props.type ?? "button"}
+        aria-label={props.ariaLabel}
         className={currentVariant.class + " rounded-sm text-center hover:brightness-75 duration-200 cursor-pointer " + props.className + " " + props.size}>
         {props.children}
       </button> :
       <Link
         href={props.href ?? "/"}
+        aria-label={props.ariaLabel}
         className={currentVariant.class + " rounded-sm text-center hover:brightness-75 duration-200 " + props.className + " " + props.size}>
         {props.children}
       </Link>
